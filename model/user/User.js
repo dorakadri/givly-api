@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["Admin", "SimpleUser", "Association"],
+      enum: ["Admin", "SimpleUser", "Association","Livreur"],
       required: true,
     },
 
@@ -105,11 +105,23 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Post'
     }],
+    recette: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipe'
+    }],
     Ownposts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Post'
     }],
-    Rankpoints: Number,
+    
+    Rankpoints : {
+      type:Number,
+      default:0,
+    },
+    Giftowned: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Gift'
+    }]
   },
   {
     toJSON: {
@@ -130,7 +142,7 @@ userSchema.pre("save", async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  console.log("ffgfr ");
+
   next();
 });
 

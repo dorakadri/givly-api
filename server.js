@@ -21,9 +21,11 @@ const diyRoutes=require("./routes/Objects/objectRoute")
 const postForumRoute = require("./routes/postsForum/postForumRoute");
 const commentRoutes = require("./routes/comments/commentRoute");
 const AssoRoutes=require("./routes/Asso/AssoRoutes")
+const  recetteRoutes = require("./routes/recettes/recetteRoute");
 const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
 const cors = require("cors");
 const deliveryRoutes = require("./routes/deliveries/delivery");
+const transactionRoutes = require("./routes/transaction/transactionRoutes");
 
 const app = express();
 //DB
@@ -54,6 +56,7 @@ app.use(
 );
 
 
+
 app.use("/auth", authRoute);
 //Middleware
 app.use(express.json());
@@ -68,10 +71,14 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/DeliveryMen", deliveryMensRoutes);
 //Delivery route
 app.use("/api/Delivery", deliveryRoutes);
+
+
+app.use("/api/Transaction", transactionRoutes);
 //gift route
 app.use("/api/gift", giftsRoutes);
 app.use("/api/mainposts", postRoutes);
 app.use("/api/diy", diyRoutes);//chat
+app.use("/api/recette", recetteRoutes);
 app.use("/api/asso", AssoRoutes);
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {

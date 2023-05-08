@@ -21,7 +21,7 @@ function getRandomDate() {
 
 const createDeliveryCtrl = expressAsyncHandler(async (req, res) => {
   const {locationOwner, locationUser, post, user} = req.body;
-  console.log(req.body);
+ 
 
   try {
     const deliveryId = await DeliveryMen.findOne({isAvailable:true},{_id:1})
@@ -56,7 +56,7 @@ const createDeliveryCtrl = expressAsyncHandler(async (req, res) => {
 async function updateOrderStatus() {
   const today = new Date().toISOString().substring(0, 10); // get the current date in ISO format (yyyy-mm-dd)
   const ordersToUpdate = await Delivery.find({dateLivraison:{ $gte: new Date(today), $lt: new Date(today + 'T23:59:59.999Z') }, state:'New'}); // find orders with the delivery date equal to today and the status not already 'pending'
- console.log(ordersToUpdate)
+
   ordersToUpdate.forEach(async (order) => {
     order.state = 'Transit'; // update the status to 'pending'
     await order.save(); 
@@ -86,7 +86,7 @@ const fetchAllDeliveryCtrl = expressAsyncHandler(async (req, res) => {
     
     ;
 
-  console.log("aaaa");
+
 
   res.json(deliveries);
   } catch (error) {
@@ -95,6 +95,29 @@ const fetchAllDeliveryCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
+  //--getallliv -------
+  
+  const fetchAlldeliveryLivCtrl = expressAsyncHandler(async (req, res) => {
+    try {
+      const deliveries = await Delivery.find({})
+      .populate('post')
+      .populate({
+        path: 'post',
+        populate: {
+          path: 'userId',
+          select: 'firstName lastName profilePhoto'
+        }
+      })
+      .populate('user',"firstName lastName profilePhoto")
+      .populate("deliveryMen","firstName phone")
+      ;
+  
+
+      res.json(deliveries);
+    } catch (error) {
+      res.json(error);
+    }
+  });
 //--delete---
 
 const deleteDeliveryCtrl = expressAsyncHandler(async (req, res) => {
@@ -111,7 +134,8 @@ const deleteDeliveryCtrl = expressAsyncHandler(async (req, res) => {
 const getByIdCtrl =expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
-  try { const deliveries = await Delivery.findById(id)
+  try {
+     const deliveries = await Delivery.findById(id)
   .populate('post')
   .populate({
     path: 'post',
@@ -125,7 +149,7 @@ const getByIdCtrl =expressAsyncHandler(async (req, res) => {
   
   ;
 
-console.log("aaaa");
+
 
 res.json(deliveries);
 } catch (error) {
@@ -136,10 +160,10 @@ res.json(deliveries);
 const updateuserlocationCtrl = expressAsyncHandler(async (req, res) => {
   const {location} = req.body;
   const {userId } = req.params;
-console.log(userId)
+
   try {
     const user = await User.findOne({ _id: userId });
-    console.log(user)
+  
    user.location = location;
     user.save();
     res.json(user);
@@ -157,5 +181,7 @@ module.exports = {
   deleteDeliveryCtrl,
 
   getByIdCtrl,
-  updateuserlocationCtrl
+  updateuserlocationCtrl,
+  fetchAlldeliveryLivCtrl,
+ 
 };

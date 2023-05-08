@@ -4,7 +4,8 @@ const {
     fetchAllDeliveryCtrl,
     deleteDeliveryCtrl,
     getByIdCtrl,
-    updateuserlocationCtrl
+    updateuserlocationCtrl,
+    fetchAlldeliveryLivCtrl
    
 
 } = require("../../controllers/deliveries/deliveryCtrl");
@@ -20,6 +21,7 @@ deliveryRoutes.get("/delevery/:id",getByIdCtrl);
 deliveryRoutes.delete("/:id",  deleteDeliveryCtrl);
 
 
+deliveryRoutes.get("/", fetchAlldeliveryLivCtrl);
 
 
 
