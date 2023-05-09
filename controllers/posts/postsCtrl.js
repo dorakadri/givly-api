@@ -412,6 +412,8 @@ taker.Rankpoints = taker.Rankpoints+5;
 owner.Rankpoints= owner.Rankpoints +10;
 await taker.save();
 await owner.save();
+      giveGift(req.body.Taker);
+      giveGift(req.body.Owner);
 
 
 
